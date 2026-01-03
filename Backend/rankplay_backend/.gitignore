@@ -1,0 +1,35 @@
+# Backend Python/Django
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+db.sqlite3
+.env
+*.env
+.env.local
+venv/
+env/
+.venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# Static files (collected)
+staticfiles/
+
+# Media files (user uploads)
+media/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.temp

@@ -13,7 +13,7 @@ class Command(BaseCommand):
         # Crear usuarios de prueba
         usuarios_data = [
             {'username': 'carlos_gamer', 'email': 'carlos@test.com', 'display_name': 'Carlos Pro'},
-            {'username': 'maria_snake', 'email': 'maria@test.com', 'display_name': 'Maria Snake'},
+            {'username': 'maria_games', 'email': 'maria@test.com', 'display_name': 'Maria Games'},
             {'username': 'juan_master', 'email': 'juan@test.com', 'display_name': 'Juan Master'},
             {'username': 'sofia_puzzle', 'email': 'sofia@test.com', 'display_name': 'Sofia Puzzle'},
             {'username': 'diego_wins', 'email': 'diego@test.com', 'display_name': 'Diego Wins'},
