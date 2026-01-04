@@ -44,6 +44,7 @@ Frontend/rankplay-mobile/dist/
 Frontend/rankplay-mobile/build/
 Frontend/rankplay-mobile/web-build/
 Frontend/rankplay-mobile/.turbo/
+Frontend/rankplay-mobile/expo-env.d.ts/
 node_modules/
 .expo/
 *.jks

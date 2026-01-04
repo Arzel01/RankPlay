@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -66,6 +67,7 @@ function MenuItem({ icon, label, onPress, showBadge, danger }: MenuItemProps) {
 export default function ProfileScreen() {
   const { user, logout, refreshUser, isAuthenticated } = useAuth();
   const [refreshing, setRefreshing] = useState(false);
+  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -74,15 +76,13 @@ export default function ProfileScreen() {
   }, [refreshUser]);
 
   const handleLogout = async () => {
-    const confirmar = confirm('¿Estás seguro de que deseas cerrar sesión?');
-    if (confirmar) {
-      try {
-        await logout();
-        router.replace('/auth/login');
-      } catch (error) {
-        console.error('[Profile] Logout error:', error);
-        alert('Error: No se pudo cerrar sesión');
-      }
+    setLogoutModalVisible(false);
+    try {
+      await logout();
+      router.replace('/auth/login');
+    } catch (error) {
+      console.error('[Profile] Logout error:', error);
+      Alert.alert('Error', 'No se pudo cerrar sesión');
     }
   };
 
@@ -256,7 +256,7 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <TouchableOpacity 
             style={styles.logoutButton}
-            onPress={handleLogout}
+            onPress={() => setLogoutModalVisible(true)}
             activeOpacity={0.7}
           >
             <View style={styles.logoutIcon}>
@@ -269,6 +269,40 @@ export default function ProfileScreen() {
         {/* Version */}
         <Text style={styles.versionText}>RankPlay v1.0.0</Text>
       </ScrollView>
+
+      {/* Modal de confirmación de logout */}
+      <Modal
+        visible={isLogoutModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setLogoutModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Ionicons name="log-out-outline" size={32} color={Colors.accent.error} />
+            </View>
+            <Text style={styles.modalTitle}>¿Cerrar sesión?</Text>
+            <Text style={styles.modalMessage}>
+              ¿Estás seguro de que deseas cerrar sesión?
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={styles.modalCancelButton}
+                onPress={() => setLogoutModalVisible(false)}
+              >
+                <Text style={styles.modalCancelText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmButton}
+                onPress={handleLogout}
+              >
+                <Text style={styles.modalConfirmText}>Cerrar sesión</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -541,5 +575,69 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.sm,
     color: Colors.neutral[400],
     marginTop: Spacing.lg,
+  },
+
+  // Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: Spacing.xl,
+  },
+  modalContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.xl,
+    width: '100%',
+    maxWidth: 400,
+    ...Shadows.lg,
+  },
+  modalHeader: {
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  modalTitle: {
+    fontSize: FontSizes.xl,
+    fontWeight: '700',
+    color: Colors.neutral[900],
+    textAlign: 'center',
+    marginBottom: Spacing.sm,
+  },
+  modalMessage: {
+    fontSize: FontSizes.md,
+    color: Colors.neutral[600],
+    textAlign: 'center',
+    marginBottom: Spacing.lg,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: Spacing.md,
+  },
+  modalCancelButton: {
+    flex: 1,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    backgroundColor: Colors.neutral[200],
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+  },
+  modalCancelText: {
+    fontSize: FontSizes.md,
+    fontWeight: '600',
+    color: Colors.neutral[700],
+  },
+  modalConfirmButton: {
+    flex: 1,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    backgroundColor: Colors.accent.error,
+    borderRadius: BorderRadius.lg,
+    alignItems: 'center',
+  },
+  modalConfirmText: {
+    fontSize: FontSizes.md,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });

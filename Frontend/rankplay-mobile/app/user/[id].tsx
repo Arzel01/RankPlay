@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
@@ -38,11 +39,12 @@ interface UserProfile {
 
 export default function UserProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { user: currentUser, isAuthenticated } = useAuth();
+  const { user: currentUser, isAuthenticated, logout } = useAuth();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [recentScores, setRecentScores] = useState<Score[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSendingRequest, setIsSendingRequest] = useState(false);
+  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
 
   useEffect(() => {
     loadUserData();
@@ -102,6 +104,12 @@ export default function UserProfileScreen() {
     } finally {
       setIsSendingRequest(false);
     }
+  };
+
+  const handleLogout = () => {
+    setLogoutModalVisible(false);
+    // Call the logout function from AuthContext
+    logout();
   };
 
   const getFriendButtonConfig = () => {
@@ -269,6 +277,41 @@ export default function UserProfileScreen() {
             </Card>
           )}
         </View>
+
+        {/* Logout Button */}
+        <TouchableOpacity
+          onPress={() => setLogoutModalVisible(true)}
+          style={styles.logoutButton}
+        >
+          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+        </TouchableOpacity>
+
+        <Modal
+          visible={isLogoutModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setLogoutModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>¿Estás seguro de que deseas cerrar sesión?</Text>
+              <View style={styles.modalActions}>
+                <TouchableOpacity
+                  onPress={() => setLogoutModalVisible(false)}
+                  style={styles.modalCancelButton}
+                >
+                  <Text style={styles.modalCancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleLogout}
+                  style={styles.modalConfirmButton}
+                >
+                  <Text style={styles.modalConfirmButtonText}>Confirmar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </>
   );
@@ -461,5 +504,62 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.md,
     color: Colors.neutral[500],
     marginTop: Spacing.sm,
+  },
+
+  // Logout
+  logoutButton: {
+    marginTop: Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+    backgroundColor: Colors.primary[600],
+    borderRadius: BorderRadius.md,
+  },
+  logoutButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: BorderRadius.md,
+    padding: Spacing.lg,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: FontSizes.md,
+    color: Colors.neutral[900],
+    marginBottom: Spacing.md,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalCancelButton: {
+    flex: 1,
+    padding: Spacing.md,
+    backgroundColor: Colors.neutral[200],
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+    marginRight: Spacing.sm,
+  },
+  modalCancelButtonText: {
+    color: Colors.neutral[900],
+  },
+  modalConfirmButton: {
+    flex: 1,
+    padding: Spacing.md,
+    backgroundColor: Colors.primary[600],
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+  },
+  modalConfirmButtonText: {
+    color: '#FFFFFF',
   },
 });

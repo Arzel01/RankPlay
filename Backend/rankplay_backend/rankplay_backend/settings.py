@@ -20,6 +20,7 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = [
     "rankplay-production.up.railway.app",
+    "*",
     ]
 
 
