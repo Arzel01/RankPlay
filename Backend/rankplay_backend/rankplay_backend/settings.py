@@ -18,7 +18,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-l!5^9cz1mugwe=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,192.168.100.23').split(',')
+ALLOWED_HOSTS = [
+    "rankplay-production.up.railway.app",
+    ]
 
 
 # Application definition
