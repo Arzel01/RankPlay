@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // URL del backend segun el entorno
 const API_BASE_URL = __DEV__ 
   ? 'http://192.168.100.23:8000/api/v1'  // Desarrollo local
-  : 'https://rankplay-api.up.railway.app/api/v1';  // Produccion (cambiar por tu URL real)
+  : 'https://rankplay-production.up.railway.app';  // Produccion 
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = 'rankplay_access_token';

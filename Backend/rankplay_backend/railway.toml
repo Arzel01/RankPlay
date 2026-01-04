@@ -2,6 +2,6 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "python manage.py migrate && gunicorn rankplay_backend.wsgi --bind 0.0.0.0:$PORT"
+startCommand = "gunicorn rankplay_backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
