@@ -6,8 +6,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // URL del backend segun el entorno
+// IMPORTANTE: Cambia esta IP por la IP de tu computadora en la red local
+// Para obtener tu IP: En Windows ejecuta 'ipconfig' en el terminal
+const LOCAL_IP = '192.168.1.6';  // Cambia esto a tu IP local
+
 const API_BASE_URL = __DEV__ 
-  ? 'http://192.168.100.23:8000/api/v1'  // Desarrollo local
+  ? `http://${LOCAL_IP}:8000/api/v1`  // Desarrollo local
   : 'https://rankplay-production.up.railway.app/api/v1';  // Produccion 
 
 // Token storage keys
